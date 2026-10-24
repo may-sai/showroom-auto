@@ -1,0 +1,170 @@
+<div class="app-shell" [class.dark]="darkMode" [class.has-bar]="compareIds.length > 0">
+
+  <app-head-bar
+    [darkMode]="darkMode"
+    [favoritesCount]="favorites.length"
+    (onToggleTheme)="toggleTheme()">
+  </app-head-bar>
+
+  <app-search-bar
+    [autos]="autoList"
+    [favorites]="favorites"
+    [compareIds]="compareIds"
+    (onSelectCar)="selectCar($event)"
+    (onToggleFavorite)="toggleFavorite($event)"
+    (onToggleCompare)="toggleCompare($event)">
+  </app-search-bar>
+
+  <!-- Barre de comparaison (apparaît dès qu'une voiture est cochée) -->
+  @if (compareIds.length > 0) {
+    <div class="compare-bar">
+      <span class="compare-names">
+        @for (c of compareCars; track c.id) {
+          <span class="compare-tag">{{ c.brand }} {{ c.model }}</span>
+        }
+        @if (compareIds.length === 1) {
+          <span class="compare-hint">Pick one more car</span>
+        }
+      </span>
+      <button class="btn primary" [disabled]="compareIds.length < 2" (click)="openCompare()">Compare</button>
+      <button class="btn ghost" (click)="clearCompare()">Clear</button>
+    </div>
+  }
+
+  <!-- Fenêtre de comparaison -->
+  @if (showCompare && compareCars.length === 2) {
+    <div class="overlay" (click)="closeCar()">
+      <div class="compare-modal" (click)="$event.stopPropagation()">
+        <button class="close-btn" (click)="closeCar()" aria-label="Close">✕</button>
+        <h2>Compare</h2>
+
+        <div class="compare-grid">
+          <div></div>
+          @for (c of compareCars; track c.id) {
+            <div class="compare-head">
+              <img src="images/{{ c.photo }}" [alt]="c.brand + ' ' + c.model">
+              <strong>{{ c.brand }} {{ c.model }}</strong>
+            </div>
+          }
+
+          <div class="row-label">Price</div>
+          @for (c of compareCars; track c.id) {
+            <div class="cell" [class.best]="isBest('price', c)">{{ c.price }} K DNT</div>
+          }
+
+          <div class="row-label">Power</div>
+          @for (c of compareCars; track c.id) {
+            <div class="cell" [class.best]="isBest('power', c)">{{ c.power }}</div>
+          }
+
+          <div class="row-label">In stock</div>
+          @for (c of compareCars; track c.id) {
+            <div class="cell" [class.best]="isBest('availability', c)">{{ c.availability }} units</div>
+          }
+        </div>
+        <p class="compare-note">★ The highlighted value is the best one (lowest price, highest power and stock).</p>
+      </div>
+    </div>
+  }
+
+  <!-- Fenêtre de détails -->
+  @if (selectedCar) {
+    <div class="overlay" (click)="closeCar()">
+      <div class="car-detail" (click)="$event.stopPropagation()">
+
+        <button class="close-btn" (click)="closeCar()" aria-label="Close">✕</button>
+
+        <img src="images/{{ selectedCar.photo }}" [alt]="selectedCar.brand + ' ' + selectedCar.model">
+
+        <div class="info">
+          <p class="detail-brand">{{ selectedCar.brand }}</p>
+          <h2>{{ selectedCar.model }}</h2>
+
+          <div class="specs">
+            <div class="spec">
+              <span class="spec-value">{{ selectedCar.power }}</span>
+              <span class="spec-label">Power</span>
+            </div>
+            <div class="spec">
+              <span class="spec-value">{{ selectedCar.price }}</span>
+              <span class="spec-label">Price (K DNT)</span>
+            </div>
+            <div class="spec">
+              <span class="spec-value">{{ selectedCar.availability }}</span>
+              <span class="spec-label">In stock</span>
+            </div>
+          </div>
+
+          <p class="description">{{ selectedCar.description }}</p>
+
+          <!-- Simulateur de financement -->
+          <div class="finance">
+            <h4>Financing simulator</h4>
+
+            <label for="months">Duration: <b>{{ months }} months</b></label>
+            <input #monthsInput id="months" type="range" min="12" max="84" step="12"
+              [value]="months" (input)="onMonthsChange(monthsInput.value)">
+
+            <label for="down">Down payment: <b>{{ downPercent }}% ({{ downAmount(selectedCar) | number }} DNT)</b></label>
+            <input #downInput id="down" type="range" min="0" max="50" step="5"
+              [value]="downPercent" (input)="onDownChange(downInput.value)">
+
+            <p class="monthly">{{ monthlyPayment(selectedCar) | number }} <small>DNT / month</small></p>
+            <p class="note">Estimate at 9% per year (price read as thousands of DNT). Not a bank offer.</p>
+          </div>
+
+          <div class="actions">
+            @if (getTestDrive(selectedCar.id); as booking) {
+              <span class="booked">✓ Test drive booked for {{ booking.date }}</span>
+            } @else {
+              <button class="btn primary" (click)="toggleTestForm()">Book a test drive</button>
+            }
+
+            <button
+              class="btn ghost"
+              [class.active]="isFavorite(selectedCar.id)"
+              (click)="toggleFavorite(selectedCar.id)">
+              {{ isFavorite(selectedCar.id) ? '♥ In favorites' : '♡ Add to favorites' }}
+            </button>
+
+            <button
+              class="btn ghost compare"
+              [class.active]="compareIds.includes(selectedCar.id)"
+              (click)="toggleCompare(selectedCar.id)">
+              {{ compareIds.includes(selectedCar.id) ? '✓ Compare' : '⇄ Compare' }}
+            </button>
+          </div>
+
+          <!-- Formulaire d'essai -->
+          @if (showTestForm && !getTestDrive(selectedCar.id)) {
+            <div class="test-form">
+              <input #nameInput type="text" placeholder="Your name">
+              <input #phoneInput type="tel" placeholder="Phone number">
+              <input #dateInput type="date" [min]="today">
+              @if (testDriveError) {
+                <p class="error">{{ testDriveError }}</p>
+              }
+              <button class="btn primary"
+                (click)="submitTestDrive(selectedCar.id, nameInput.value, phoneInput.value, dateInput.value)">
+                Confirm
+              </button>
+            </div>
+          }
+
+          <!-- Voitures similaires -->
+          <h4 class="similar-title">You may also like</h4>
+          <div class="similar">
+            @for (s of similarCars(selectedCar); track s.id) {
+              <div class="mini" (click)="selectCar(s)">
+                <img src="images/{{ s.photo }}" [alt]="s.brand + ' ' + s.model">
+                <span>{{ s.brand }} {{ s.model }}</span>
+                <b>{{ s.price }} K DNT</b>
+              </div>
+            }
+          </div>
+        </div>
+      </div>
+    </div>
+  }
+
+</div>

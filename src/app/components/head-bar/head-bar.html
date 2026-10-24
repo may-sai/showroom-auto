@@ -1,0 +1,19 @@
+<div class="header">
+  <div class="spacer"></div>
+
+  <div class="title">
+    <h1>Welcome to my Showroom!</h1>
+    <p>Find the car that fits you</p>
+  </div>
+
+  <div class="actions">
+    <span class="fav-counter" title="Your favorites">
+      <fa-icon [icon]="faHeart"></fa-icon>
+      {{ favoritesCount }}
+    </span>
+
+    <button class="theme-btn" (click)="toggleTheme()" [title]="darkMode ? 'Light mode' : 'Dark mode'">
+      <fa-icon [icon]="darkMode ? faSun : faMoon"></fa-icon>
+    </button>
+  </div>
+</div>

@@ -1,0 +1,170 @@
+/* ---------- Barre d'outils ---------- */
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 16px 24px;
+  margin: 30px 30px 10px;
+  padding: 14px 20px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  box-shadow: var(--shadow);
+}
+
+.container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 240px;
+  padding: 8px 14px;
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  background: var(--bg);
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.container:focus-within {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-soft);
+}
+
+.container input {
+  all: unset;
+  flex: 1;
+  min-width: 0;
+  font-size: 14px;
+  color: var(--text);
+}
+
+fa-icon {
+  font-size: 14px;
+  color: var(--muted);
+}
+
+.control {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+label {
+  font-size: 12px;
+  font-weight: bold;
+  color: var(--accent-2);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+label b {
+  color: var(--text);
+}
+
+select {
+  padding: 6px 10px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--bg);
+  color: var(--text);
+  font-size: 14px;
+  cursor: pointer;
+}
+
+input[type='range'] {
+  width: 170px;
+  accent-color: var(--accent);
+  cursor: pointer;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  border: 2px solid var(--border);
+  border-radius: 25px;
+  background: transparent;
+  color: var(--text);
+  font-weight: bold;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.chip:hover {
+  border-color: var(--accent);
+}
+
+.chip.active {
+  border-color: #ef4444;
+  background: rgba(239, 68, 68, 0.12);
+  color: #ef4444;
+}
+
+.chip.active fa-icon {
+  color: #ef4444;
+}
+
+/* ---------- Boutons de marques ---------- */
+.brands {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 14px 30px 0;
+}
+
+.brand-chip {
+  padding: 6px 16px;
+  border: 2px solid var(--border);
+  border-radius: 20px;
+  background: var(--surface);
+  color: var(--text);
+  font-size: 13px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.brand-chip:hover {
+  border-color: var(--accent);
+}
+
+.brand-chip.active {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: white;
+}
+
+.results-count {
+  margin: 14px 34px 10px;
+  font-size: 13px;
+  color: var(--muted);
+}
+
+/* ---------- Grille de cartes ---------- */
+.cars-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 26px;
+  padding: 10px 30px 20px;
+}
+
+.empty {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 50px 0;
+  color: var(--muted);
+  font-size: 18px;
+}
+
+.load-more {
+  text-align: center;
+  padding: 0 0 30px;
+}
+
+@media (max-width: 700px) {
+  .toolbar { margin: 16px 12px 6px; }
+  .brands { margin: 12px 12px 0; }
+  .cars-container { padding: 10px 12px 20px; }
+  .container { width: 100%; }
+}

@@ -1,0 +1,32 @@
+<div class="auto-card" [class.compared]="isCompared">
+
+  <div class="photo">
+    <img src="images/{{auto.photo}}" [alt]="auto.brand + ' ' + auto.model">
+    <span class="badge" [attr.data-level]="powerLevel">{{ powerLevel }}</span>
+    <button class="fav-btn" [class.active]="isFavorite"
+      (click)="onToggleFavorite.emit(auto.id)" title="Add to favorites">
+      <fa-icon [icon]="faHeart"></fa-icon>
+    </button>
+  </div>
+
+  <div class="details">
+    <h3>{{auto.brand}} {{auto.model}}</h3>
+
+    <div class="power-row">
+      <span>Power : {{auto.power}}</span>
+      <div class="power-bar"><div class="power-fill" [style.width.%]="powerPercent"></div></div>
+    </div>
+
+    <p class="price">{{auto.price}} <small>K DNT</small></p>
+    <p class="stock" [class.low]="isLowStock">
+      {{ isLowStock ? 'Hurry, only ' + auto.availability + ' units left!' : auto.availability + ' units in stock' }}
+    </p>
+  </div>
+
+  <div class="card-actions">
+    <button class="see-more" (click)="onSelect.emit(auto)">See more ...</button>
+    <button class="compare-btn" [class.active]="isCompared" (click)="onToggleCompare.emit(auto.id)">
+      {{ isCompared ? '✓ Compare' : '⇄ Compare' }}
+    </button>
+  </div>
+</div>

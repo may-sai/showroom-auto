@@ -1,0 +1,37 @@
+/* Styles globaux : variables de couleurs (thème clair par défaut) */
+:root {
+  --bg: #eef3f7;
+  --surface: #ffffff;
+  --text: #0f172a;
+  --muted: #64748b;
+  --border: #d9e2ec;
+  --accent: #0d9488;          /* turquoise */
+  --accent-2: #f97316;        /* orange */
+  --accent-soft: rgba(13, 148, 136, 0.15);
+  --img-bg: #e2e8f0;
+  --shadow: 0 4px 14px rgba(15, 23, 42, 0.08);
+  --shadow-hover: 0 12px 28px rgba(13, 148, 136, 0.28);
+}
+
+/* Thème sombre : activé par la classe "dark" sur .app-shell */
+.app-shell.dark {
+  --bg: #0b1220;
+  --surface: #131c2e;
+  --text: #e8eef7;
+  --muted: #94a3b8;
+  --border: #243049;
+  --accent: #2dd4bf;
+  --accent-soft: rgba(45, 212, 191, 0.18);
+  --img-bg: #1d2940;
+  --shadow: 0 4px 14px rgba(0, 0, 0, 0.5);
+  --shadow-hover: 0 12px 28px rgba(45, 212, 191, 0.25);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: 'Segoe UI', system-ui, -apple-system, Roboto, sans-serif;
+}
